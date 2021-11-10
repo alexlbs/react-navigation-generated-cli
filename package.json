@@ -1,0 +1,63 @@
+{
+  "_from": "react-navigation-generated-cli",
+  "_id": "react-navigation-generated-cli@0.0.19",
+  "_inBundle": false,
+  "_integrity": "sha512-JF3Q1Y1PGDHCwJV7NleMAEWA0eM44B5Nr3PiJIi25MhEo1K7OTm8Snr5KR8zLm17pbePeWoaMdPojDtSIKKoOQ==",
+  "_location": "/react-navigation-generated-cli",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-navigation-generated-cli",
+    "name": "react-navigation-generated-cli",
+    "escapedName": "react-navigation-generated-cli",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-navigation-generated-cli/-/react-navigation-generated-cli-0.0.19.tgz",
+  "_shasum": "95188786fe75fa91ba6af7c63d38b8942c18f0bd",
+  "_spec": "react-navigation-generated-cli",
+  "_where": "/Users/alexlobas/Projects/JS/siteform-ts/app",
+  "author": {
+    "name": "siddhatiwari"
+  },
+  "bin": {
+    "rn-gen": "lib/index.js"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@types/cli-spinner": "^0.2.0",
+    "@types/js-yaml": "^3.12.4",
+    "cli-spinner": "^0.2.10",
+    "commander": "^5.1.0",
+    "js-yaml": "^3.14.0",
+    "match-all": "^1.2.5"
+  },
+  "deprecated": false,
+  "description": "Step 1. Install react-navigation in your expo app https://reactnavigation.org/docs/getting-started",
+  "devDependencies": {
+    "@types/node": "^14.0.11",
+    "ts-morph": "^7.1.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "keywords": [
+    "react-navigation",
+    "generated",
+    "routes"
+  ],
+  "license": "ISC",
+  "main": "./lib/index.js",
+  "name": "react-navigation-generated-cli",
+  "scripts": {
+    "build": "rm -rf lib && tsc -p .",
+    "create": "npm run build && npm run test",
+    "publish": "np",
+    "start": "node ./lib/index.js"
+  },
+  "version": "0.0.19"
+}
