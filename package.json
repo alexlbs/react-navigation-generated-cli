@@ -1,27 +1,4 @@
 {
-  "_from": "react-navigation-generated-cli",
-  "_id": "react-navigation-generated-cli@0.0.19",
-  "_inBundle": false,
-  "_integrity": "sha512-JF3Q1Y1PGDHCwJV7NleMAEWA0eM44B5Nr3PiJIi25MhEo1K7OTm8Snr5KR8zLm17pbePeWoaMdPojDtSIKKoOQ==",
-  "_location": "/react-navigation-generated-cli",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "react-navigation-generated-cli",
-    "name": "react-navigation-generated-cli",
-    "escapedName": "react-navigation-generated-cli",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER"
-  ],
-  "_resolved": "https://registry.npmjs.org/react-navigation-generated-cli/-/react-navigation-generated-cli-0.0.19.tgz",
-  "_shasum": "95188786fe75fa91ba6af7c63d38b8942c18f0bd",
-  "_spec": "react-navigation-generated-cli",
-  "_where": "/Users/alexlobas/Projects/JS/siteform-ts/app",
   "author": {
     "name": "siddhatiwari"
   },

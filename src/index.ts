@@ -298,9 +298,11 @@ try {
     // MARK requires that an ios simulator is running
     console.log('Starting expo...');
 
-    let routeMapString = '';
     let firstLog = false;
     let finished = false;
+    let lastDataTail = '';
+    let startMarkerFound = false; 
+    let collectedOutput = '';
     let prevRouteMap: string;
 
     const waitTimeout = setTimeout(() => {
@@ -312,21 +314,12 @@ try {
       }
     }, (program.timeout ?? DEFAULT_APP_LOGS_TIMEOUT_SECONDS) * 1000);
 
+    // one call of console.log does not mean exactly one call of onExpoData callback.
+    // i.e one block that we write with console.log can be split into several calls of onExpoData
+    // and several console.log can be joined into one call of onExpoData..
+    // all other combinations is possible (like we write data with 2 calls and read with 3 callbacks).
+    // so we need to be prepared that our data STREAM can be split to block at any place (choosed by OS)
     const onExpoData = (data: any) => {
-      const output: string = data.toString();
-      const outputHasIdentifier = output.includes(START_IDENTIFIER);
-      const outputHasEndIdentifier = output.includes(END_IDENTIFIER);
-     
-      if (
-        program.showLogs &&
-        !outputHasIdentifier &&
-        output.length < 1000 &&
-        output &&
-        output.trim()
-      ) {
-        console.log(output.trim());
-      }
-
       if (!firstLog) {
         firstLog = true;
         if (!program.keepOpen) {
@@ -334,13 +327,40 @@ try {
         }
       }
 
-      if (outputHasIdentifier) {
-        routeMapString += output.match(
-          /REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/,
-        )![1];
+      let output: string = data.toString();
+      // 1) we should assume that our start\end marker can be split into to separate blocks.
+      //    for example previous data ends with REACT_NAVIGATION and new block starts with _GENERATED_OUTPUT
+      //    so we need to store last few bytes of previous block somewhere and use them to search for start marker
+      const withTail = lastDataTail + output;
+      lastDataTail = withTail.substr(-START_IDENTIFIER.length);
+
+      if (!startMarkerFound) {
+        const startIndex = withTail.indexOf(START_IDENTIFIER);
+        if (startIndex >= 0) {
+          startMarkerFound = true;
+          collectedOutput = withTail.substr(startIndex);
+          // cut JSON data from output (but print prefix, because it may contain data which does not relate to natigation)
+          output = output.substring(0, startIndex - lastDataTail.length + START_IDENTIFIER.length) + '\n[json removed]\n';
+        }
+      } else {
+        // collect all blocks between markers
+        collectedOutput += output;
+        output = ''; // do not print data between markers
       }
 
-      if (outputHasEndIdentifier && (!finished || program.keepOpen)) {
+      let dataIsReady = false;
+      if (startMarkerFound) {
+        // search for end marker.  Again we use data which joined with previous blocks. do not use just current block - output.
+        const endIndex = collectedOutput.indexOf(END_IDENTIFIER);
+        if (endIndex >= 0) {
+          startMarkerFound = false;
+          dataIsReady = true;
+          output = collectedOutput.substr(endIndex); // we should print data after end marker
+          collectedOutput = collectedOutput.substr(0, endIndex);
+        }
+      }
+     
+      if (dataIsReady && (!finished || program.keepOpen)) {
         finished = true;
         if (!program.keepOpen) {
           expoProcess.kill();
@@ -348,6 +368,14 @@ try {
         clearTimeout(waitTimeout);
 
         try {
+          let routeMapString = '';
+          const lines = collectedOutput.split('\n');
+          for (const line of lines) {
+            const ok = output.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
+            if (ok) {
+              routeMapString += ok[1];
+            }
+          }
           const parsedMap = JSON.parse(routeMapString);
           if (routeMapString === prevRouteMap) return;
           prevRouteMap = routeMapString;
@@ -358,10 +386,16 @@ try {
           writeRouteParamTypes(process.cwd() + navigationroot, parsedMap);
           console.log('\nRoute map created at ' + outputpath);
         } catch (e) {
-          console.log('PARSE ERROR X' + JSON.stringify(e));
+          console.log('PARSE ERROR');
         }
 
-        routeMapString = '';
+        if (program.showLogs && output) 
+        {
+          // use stdout.write instead of console log because we do not want to modify output data
+          // console.log adds line break: so if block ends in the middle of line we do not want to break the line into two
+          process.stdout.write(output);
+          //console.log(output.trim());
+        }  
       }
     };
 
