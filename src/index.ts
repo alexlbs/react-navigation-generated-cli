@@ -340,7 +340,7 @@ try {
           startMarkerFound = true;
           collectedOutput = withTail.substr(startIndex);
           // cut JSON data from output (but print prefix, because it may contain data which does not relate to natigation)
-          output = output.substring(0, startIndex - lastDataTail.length + START_IDENTIFIER.length) + '\n[json removed]\n';
+          output = output.substring(0, startIndex - lastDataTail.length) + ' [route json removed]\n';
         }
       } else {
         // collect all blocks between markers
@@ -355,11 +355,17 @@ try {
         if (endIndex >= 0) {
           startMarkerFound = false;
           dataIsReady = true;
-          output = collectedOutput.substr(endIndex); // we should print data after end marker
+          output = collectedOutput.substr(endIndex + END_IDENTIFIER.length); // we should print data after end marker
           collectedOutput = collectedOutput.substr(0, endIndex);
         }
       }
-     
+      if (program.showLogs && output) 
+      {
+        // use stdout.write instead of console log because we do not want to modify output data
+        // console.log adds line break: so if block ends in the middle of line we do not want to break the line into two
+        process.stdout.write(output);
+        //console.log(output.trim());
+      }
       if (dataIsReady && (!finished || program.keepOpen)) {
         finished = true;
         if (!program.keepOpen) {
@@ -371,7 +377,7 @@ try {
           let routeMapString = '';
           const lines = collectedOutput.split('\n');
           for (const line of lines) {
-            const ok = line.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
+            const ok = output.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
             if (ok) {
               routeMapString += ok[1];
             }
@@ -388,14 +394,6 @@ try {
         } catch (e) {
           console.log('PARSE ERROR');
         }
-
-        if (program.showLogs && output) 
-        {
-          if (output.endsWith('\n'))
-            output = output.substr(0, output.length - 1);
-          process.stdout.write(output);
-          //console.log(output.trim());
-        }  
       }
     };
 
