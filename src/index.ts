@@ -340,7 +340,7 @@ try {
           startMarkerFound = true;
           collectedOutput = withTail.substr(startIndex);
           // cut JSON data from output (but print prefix, because it may contain data which does not relate to natigation)
-          output = output.substring(0, startIndex - lastDataTail.length) + ' [route json removed]\n';
+          output = output.substring(0, startIndex - lastDataTail.length) + '[route json removed]';
         }
       } else {
         // collect all blocks between markers
