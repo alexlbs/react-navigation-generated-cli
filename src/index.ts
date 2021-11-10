@@ -371,7 +371,7 @@ try {
           let routeMapString = '';
           const lines = collectedOutput.split('\n');
           for (const line of lines) {
-            const ok = output.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
+            const ok = line.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
             if (ok) {
               routeMapString += ok[1];
             }
