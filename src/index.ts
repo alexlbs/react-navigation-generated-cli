@@ -359,13 +359,7 @@ try {
           collectedOutput = collectedOutput.substr(0, endIndex);
         }
       }
-      if (program.showLogs && output) 
-      {
-        // use stdout.write instead of console log because we do not want to modify output data
-        // console.log adds line break: so if block ends in the middle of line we do not want to break the line into two
-        process.stdout.write(output);
-        //console.log(output.trim());
-      }
+
       if (dataIsReady && (!finished || program.keepOpen)) {
         finished = true;
         if (!program.keepOpen) {
@@ -377,23 +371,31 @@ try {
           let routeMapString = '';
           const lines = collectedOutput.split('\n');
           for (const line of lines) {
-            const ok = output.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
+            const ok = line.match(/REACT_NAVIGATION_GENERATED_OUTPUT:(.*)/);
             if (ok) {
               routeMapString += ok[1];
             }
           }
           const parsedMap = JSON.parse(routeMapString);
-          if (routeMapString === prevRouteMap) return;
-          prevRouteMap = routeMapString;
+          if (routeMapString !== prevRouteMap) {
+            prevRouteMap = routeMapString;
 
-          const outputPath = process.cwd() + outputpath;
-          const tsString = `const routeMap = ${routeMapString} as const;export default routeMap;`;
-          fs.writeFileSync(outputPath, tsString);
-          writeRouteParamTypes(process.cwd() + navigationroot, parsedMap);
-          console.log('\nRoute map created at ' + outputpath);
+            const outputPath = process.cwd() + outputpath;
+            const tsString = `const routeMap = ${routeMapString} as const;export default routeMap;`;
+            fs.writeFileSync(outputPath, tsString);
+            writeRouteParamTypes(process.cwd() + navigationroot, parsedMap);
+            console.log('\nRoute map created at ' + outputpath);  
+          }
         } catch (e) {
           console.log('PARSE ERROR');
         }
+      }
+      if (program.showLogs && output) 
+      {
+        // use stdout.write instead of console log because we do not want to modify output data
+        // console.log adds line break: so if block ends in the middle of line we do not want to break the line into two
+        process.stdout.write(output);
+        //console.log(output.trim());
       }
     };
 
