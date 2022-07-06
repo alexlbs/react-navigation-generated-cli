@@ -14,7 +14,7 @@ const START_ROUTE_TYPES_IDENTIFIER =
   '// START react-navigation-generated types\n';
 const END_ROUTE_TYPES_IDENTIFIER = '// END react-navigation-generated types\n';
 const DEFAULT_APP_LOGS_TIMEOUT_SECONDS = 60;
-const TYPE_IMPORT_MATCHER = /import.*{.*[A-Za-z] as (.*)Params.*}.*(?="|').*(?="|')/g;
+const TYPE_IMPORT_MATCHER = /import.*\s.*{.*[A-Za-z] as (.*)Params.*}.*(?="|').*(?="|')/g;
 
 // MARK requires import { useNavigation as _useNavigation } from '@react-navigation/native';
 const USE_NAVGATION_HOOK = `
