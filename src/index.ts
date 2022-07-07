@@ -224,6 +224,7 @@ const writeRouteParamTypes = (
   )
     .toArray()
     .map((s: string) => {
+      console.log("map value", s);
       const sfrag = s.split('_');
 
       const fragName = sfrag[sfrag.length - 1];
