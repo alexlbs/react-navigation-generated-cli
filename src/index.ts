@@ -402,7 +402,7 @@ try {
     };
 
     let expoProcess = exec('expo start -i');
-
+    console.log("expo process", expoProcess);
     const initExpoProcess = () => {
       expoProcess.stdout?.on('data', onExpoData);
       expoProcess.on('exit', () => {
