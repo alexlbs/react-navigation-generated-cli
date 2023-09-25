@@ -181,10 +181,7 @@ export { useNavigation, useRoute };
 program.option('-t, --timeout <timeout>', 'logs timeout seconds');
 program.option('-l, --showLogs', 'display logs');
 program.option('-k, --keepOpen', 'keep expo process running');
-
-console.log("args", process.argv);
 program.parse(process.argv);
-console.log("program", program);
 
 type RouteMap = {
   // routeName: string
@@ -331,7 +328,7 @@ try {
         }
       }
       let output: string = data.toString();
-      console.log("onExpoData", output,  startMarkerFound);
+      console.log("startMarkerFound", startMarkerFound);
       // 1) we should assume that our start\end marker can be split into to separate blocks.
       //    for example previous data ends with REACT_NAVIGATION and new block starts with _GENERATED_OUTPUT
       //    so we need to store last few bytes of previous block somewhere and use them to search for start marker
