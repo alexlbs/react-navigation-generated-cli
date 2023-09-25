@@ -327,8 +327,8 @@ try {
           console.log('Waiting for react-navigation-generated logs...');
         }
       }
-
       let output: string = data.toString();
+      console.log("onExpoData", output);
       // 1) we should assume that our start\end marker can be split into to separate blocks.
       //    for example previous data ends with REACT_NAVIGATION and new block starts with _GENERATED_OUTPUT
       //    so we need to store last few bytes of previous block somewhere and use them to search for start marker
@@ -384,6 +384,7 @@ try {
             const outputPath = process.cwd() + outputpath;
             const tsString = `const routeMap = ${routeMapString} as const;export default routeMap;`;
             fs.writeFileSync(outputPath, tsString);
+            console.log("nav root", process.cwd() + navigationroot);
             writeRouteParamTypes(process.cwd() + navigationroot, parsedMap);
             console.log('\nRoute map created at ' + outputpath);  
           }
@@ -413,6 +414,8 @@ try {
 
     if (expoProcess) {
       initExpoProcess();
+    } else {
+      console.log('expo process is not started');
     }
   } else {
     console.log('Invalid configuration file');
