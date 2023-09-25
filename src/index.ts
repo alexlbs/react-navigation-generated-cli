@@ -328,7 +328,7 @@ try {
         }
       }
       let output: string = data.toString();
-      console.log("onExpoData", output);
+      console.log("onExpoData", output,  startMarkerFound);
       // 1) we should assume that our start\end marker can be split into to separate blocks.
       //    for example previous data ends with REACT_NAVIGATION and new block starts with _GENERATED_OUTPUT
       //    so we need to store last few bytes of previous block somewhere and use them to search for start marker
@@ -337,6 +337,7 @@ try {
 
       if (!startMarkerFound) {
         const startIndex = withTail.indexOf(START_IDENTIFIER);
+        console.log("startIndex = ", startIndex);
         if (startIndex >= 0) {
           startMarkerFound = true;
           collectedOutput = withTail.substr(startIndex);
@@ -377,6 +378,7 @@ try {
               routeMapString += ok[1];
             }
           }
+          console.log("beforeParse", routeMapString);
           const parsedMap = JSON.parse(routeMapString);
           if (routeMapString !== prevRouteMap) {
             prevRouteMap = routeMapString;
@@ -392,6 +394,7 @@ try {
           console.log('PARSE ERROR');
         }
       }
+      console.log("program.showLogs", program.showLogs);
       if (program.showLogs && output) 
       {
         // use stdout.write instead of console log because we do not want to modify output data
@@ -402,7 +405,7 @@ try {
     };
 
     let expoProcess = exec('expo start -i');
-    console.log("expo process", expoProcess);
+
     const initExpoProcess = () => {
       expoProcess.stdout?.on('data', onExpoData);
       expoProcess.on('exit', () => {
