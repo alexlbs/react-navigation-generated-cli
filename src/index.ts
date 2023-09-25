@@ -181,7 +181,9 @@ export { useNavigation, useRoute };
 program.option('-t, --timeout <timeout>', 'logs timeout seconds');
 program.option('-l, --showLogs', 'display logs');
 program.option('-k, --keepOpen', 'keep expo process running');
+console.log("args", process.argv);
 program.parse(process.argv);
+console.log("program", program);
 
 type RouteMap = {
   // routeName: string
