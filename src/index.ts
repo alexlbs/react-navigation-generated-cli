@@ -405,7 +405,7 @@ try {
         //console.log(output.trim());
       }
     };
-
+    console.log("expo start -i --localhost");
     let expoProcess = exec('expo start -i --localhost');
 
     const initExpoProcess = () => {
