@@ -327,6 +327,7 @@ try {
     // all other combinations is possible (like we write data with 2 calls and read with 3 callbacks).
     // so we need to be prepared that our data STREAM can be split to block at any place (choosed by OS)
     const onExpoData = (data: any) => {
+      console.log("onExpoData enter", data);
       if (!firstLog) {
         firstLog = true;
         if (!program.keepOpen) {
@@ -394,7 +395,7 @@ try {
             console.log('\nRoute map created at ' + outputpath);  
           }
         } catch (e) {
-          console.log('PARSE ERROR');
+          console.log('PARSE ERROR', e);
         }
       }
       if (program.showLogs && output) 
@@ -404,6 +405,7 @@ try {
         process.stdout.write(output);
         //console.log(output.trim());
       }
+      console.log("onExpoData exit");
     };
     console.log("expo start -i --localhost");
     let expoProcess = exec('expo start -i --localhost');
