@@ -327,7 +327,6 @@ try {
     // all other combinations is possible (like we write data with 2 calls and read with 3 callbacks).
     // so we need to be prepared that our data STREAM can be split to block at any place (choosed by OS)
     const onExpoData = (data: any) => {
-      console.log("onExpoData enter", String(data).trimEnd());
       if (!firstLog) {
         firstLog = true;
         if (!program.keepOpen) {
@@ -405,9 +404,10 @@ try {
         process.stdout.write(output);
         //console.log(output.trim());
       }
-      console.log("onExpoData exit");
     };
     console.log("expo start -i --localhost", program.showLogs, process.argv);
+    exec('where expo', (err, stdout) => console.log("expo path:", stdout));
+
     let expoProcess = exec('expo start -i --localhost');
 
     const initExpoProcess = () => {
