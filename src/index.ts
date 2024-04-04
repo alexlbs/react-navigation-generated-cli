@@ -239,19 +239,25 @@ const writeRouteParamTypes = (
   const allRouteNames = new Set<string>();
   getRouteMapRouteNames(rootNavigators, allRouteNames);
 
-  const typesObjString = keyToImports.reduce(
-    (str, [key, val], i) =>
-      str + (i === 0 ? '\n' : '') + `  '${key}': ${val}Params;\n`,
-    '',
-  );
+  const typesObjString = keyToImports.map(([key, val]) => `  '${key}': ${val}Params;`).join("\n");
+
+//  const typesObjString = keyToImports.reduce(
+//    (str, [key, val], i) =>
+//      str + (i === 0 ? '\n' : '') + `  '${key}': ${val}Params;\n`,
+//    '',
+//  );
   const noParamsString = [...allRouteNames]
     .filter((k) => !routeNamesWithParams.has(k))
-    .reduce((str, routeName) => str + `  '${routeName}': {};\n`, '');
+    .map(routeName => `  '${routeName}': {};`).join('\n');
+    //.reduce((str, routeName) => str + `  '${routeName}': {};\n`, '');
 
-  const paramsString = [...fragmentRouteNames].reduce(
-    (str, key, i) => str + (i === 0 ? '\n' : '') + `  ${key} = '${key}', \n`,
-    '',
-  );
+//  const paramsString = [...fragmentRouteNames].reduce(
+//    (str, key, i) => str + (i === 0 ? '\n' : '') + `  ${key} = '${key}', \n`,
+//    '',
+//  );
+
+  const paramsString = [...fragmentRouteNames].map(key => `  ${key} = '${key}'`).join(",\n");
+
 
   const fragString = [...fragmentRouteNames]
     .filter((k) => !routeNamesWithParams.has(k))
@@ -400,13 +406,13 @@ try {
       }
     };
 
-    let expoProcess = exec('expo start -i');
+    let expoProcess = exec('expo start -i --localhost');
 
     const initExpoProcess = () => {
       expoProcess.stdout?.on('data', onExpoData);
       expoProcess.on('exit', () => {
         console.log('Restarting expo...');
-        expoProcess = exec('expo start -i');
+        expoProcess = exec('expo start -i --localhost');
         initExpoProcess();
       });
     };
